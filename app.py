@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 import tensorflow as tf
 import numpy as np
 import os
+import gc
 from datetime import datetime
 from utils import preprocess_image  # Ensure preprocess_image is defined in utils.py
 
@@ -145,26 +146,52 @@ def predict():
                 filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 file.save(filepath)
 
-                # Preprocess the image
-                img_array = preprocess_image(filepath)
-                pred = model.predict(img_array)[0]
+                try:
+                    # Preprocess the image
+                    img_array = preprocess_image(filepath)
 
-                # Handle both softmax and sigmoid outputs
-                if len(pred) == 1:
-                    label = class_labels[1] if pred[0] > 0.5 else class_labels[0]
-                    confidence = pred[0] if pred[0] > 0.5 else 1 - pred[0]
-                else:
-                    label = class_labels[np.argmax(pred)]
-                    confidence = np.max(pred)
+                    # Predict using the model
+                    pred = model.predict(img_array, verbose=0)[0]
 
-                confidence = round(confidence * 100, 2)
+                    # Handle both softmax and sigmoid outputs
+                    if len(pred) == 1:
+                        label = class_labels[1] if pred[0] > 0.5 else class_labels[0]
+                        confidence = pred[0] if pred[0] > 0.5 else 1 - pred[0]
+                    else:
+                        label = class_labels[np.argmax(pred)]
+                        confidence = np.max(pred)
 
-                # Save prediction to database
-                new_prediction = Prediction(filename=filename, prediction=label, confidence=confidence, user_id=current_user.id)
-                db.session.add(new_prediction)
-                db.session.commit()
+                    confidence = round(confidence * 100, 2)
 
-                predictions.append({'filename': filename, 'label': label, 'confidence': confidence})
+                    # Save prediction to database
+                    new_prediction = Prediction(
+                        filename=filename,
+                        prediction=label,
+                        confidence=confidence,
+                        user_id=current_user.id
+                    )
+                    db.session.add(new_prediction)
+                    db.session.commit()
+
+                    predictions.append({
+                        'filename': filename,
+                        'label': label,
+                        'confidence': confidence
+                    })
+
+                except Exception as e:
+                    flash(f"Error processing image {filename}: {e}", "danger")
+
+                finally:
+                    # Free up memory and delete file
+                    try:
+                        os.remove(filepath)
+                    except Exception as e:
+                        print(f"Error deleting file: {e}")
+
+                    del img_array, pred
+                    import gc
+                    gc.collect()
 
     return render_template('predict.html', predictions=predictions)
 
