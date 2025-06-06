@@ -129,6 +129,73 @@ def dashboard():
     predictions = Prediction.query.filter_by(user_id=current_user.id).order_by(Prediction.timestamp.desc()).all()
     return render_template('dashboard.html', predictions=predictions)
 
+@app.route('/predict', methods=['GET', 'POST'])
+@login_required
+def predict():
+    predictions = []
+    if request.method == 'POST':
+        files = request.files.getlist('images')
+
+        if not files:
+            flash('No files selected!', 'danger')
+            return redirect(request.url)
+
+        for file in files:
+            if allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(filepath)
+
+                try:
+                    # Preprocess the image
+                    img_array = preprocess_image(filepath)
+
+                    # Predict using the model
+                    pred = model.predict(img_array, verbose=0)[0]
+
+                    # Handle both softmax and sigmoid outputs
+                    if len(pred) == 1:
+                        label = class_labels[1] if pred[0] > 0.5 else class_labels[0]
+                        confidence = pred[0] if pred[0] > 0.5 else 1 - pred[0]
+                    else:
+                        label = class_labels[np.argmax(pred)]
+                        confidence = np.max(pred)
+
+                    confidence = round(confidence * 100, 2)
+
+                    # Save prediction to database
+                    new_prediction = Prediction(
+                        filename=filename,
+                        prediction=label,
+                        confidence=confidence,
+                        user_id=current_user.id
+                    )
+                    db.session.add(new_prediction)
+                    db.session.commit()
+
+                    predictions.append({
+                        'filename': filename,
+                        'label': label,
+                        'confidence': confidence
+                    })
+
+                except Exception as e:
+                    flash(f"Error processing image {filename}: {e}", "danger")
+
+                finally:
+                    # Free up memory and delete file
+                    try:
+                        os.remove(filepath)
+                    except Exception as e:
+                        print(f"Error deleting file: {e}")
+
+                    del img_array, pred
+                    import gc
+                    gc.collect()
+
+    return render_template('predict.html', predictions=predictions)
+
+
 @app.route('/history')
 @login_required
 def history():
