@@ -27,8 +27,8 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 # Path to the trained model
-MODEL_PATH = "model/my_model_checkpoint.keras"
-model = tf.keras.models.load_model(MODEL_PATH)
+MODEL_PATH = r"/Users/devanshuurmaliya/Downloads/PenmoNet_V2_Project/model/my_model_checkpoint.keras"
+model = tf.keras.models.load_model(MODEL_PATH)  # Load the trained model
 class_labels = ['Normal', 'Pneumonia']  # Class labels
 
 # User model for database
