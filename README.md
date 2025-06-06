@@ -14,8 +14,6 @@ PneumoNet-V2 is an AI-powered pneumonia detection system built using deep learni
 - 🌐 Flask backend with HTML/CSS/JS frontend
 - 📁 Easily extendable and customizable
 
----
-
 ## 🛠️ Tech Stack
 
 | Layer        | Tech Used                        |
