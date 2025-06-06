@@ -1,4 +1,4 @@
-model/my_model_checkpoint.keras
+
 checkpoints/best_model.keras
 checkpoints/latest_checkpoint.keras
 env/lib/python3.9/site-packages/tensorflow/libtensorflow_cc.2.dylib
