@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Home - PneumoNet-V2{% endblock %}
+
+{% block content %}
+<div class="hero-section text-center py-5">
+    <h1 class="display-4 fw-bold text-primary">🩺 PneumoNet-V2</h1>
+    <p class="lead text-muted">An AI-powered system to detect pneumonia from chest X-rays.</p>
+
+    <div class="mt-4">
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('predict') }}" class="btn btn-lg btn-success px-5 py-2 me-2 shadow">
+                🔍 Start Detection
+            </a>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-lg btn-outline-secondary px-4 py-2 shadow-sm">
+                📊 Dashboard
+            </a>
+        {% else %}
+            <a href="{{ url_for('login') }}" class="btn btn-lg btn-primary px-5 py-2 me-2 shadow">
+                🔐 Login
+            </a>
+            <a href="{{ url_for('register') }}" class="btn btn-lg btn-outline-secondary px-4 py-2 shadow-sm">
+                📝 Register
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="mt-5">
+        <img src="{{ url_for('static', filename='images/xray-scan.png') }}" alt="Chest X-Ray" class="img-fluid" style="max-height: 300px;">
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Prediction History - PneumoNet-V2{% endblock %}
+
+{% block content %}
+<div class="history-container py-4">
+    <div class="text-center mb-4">
+        <h2 class="fw-bold text-secondary">📜 Prediction History</h2>
+        <p class="text-muted">Review your past chest X-ray predictions and confidence levels.</p>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">🧾 Your Prediction Logs</h5>
+        </div>
+        <div class="card-body">
+            {% if predictions %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>📁 Filename</th>
+                            <th>🧠 Prediction</th>
+                            <th>📊 Confidence</th>
+                            <th>⏰ Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for prediction in predictions %}
+                        <tr>
+                            <td>{{ prediction.filename }}</td>
+                            <td>
+                                {% if prediction.prediction == "Pneumonia" %}
+                                    <span class="badge bg-danger">{{ prediction.prediction }}</span>
+                                {% else %}
+                                    <span class="badge bg-success">{{ prediction.prediction }}</span>
+                                {% endif %}
+                            </td>
+                            <td><strong>{{ prediction.confidence }}%</strong></td>
+                            <td>{{ prediction.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info text-center">
+                <h6 class="mb-0">No prediction history found. Start by uploading a chest X-ray image!</h6>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

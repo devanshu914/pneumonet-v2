@@ -1,0 +1,70 @@
+{% extends "base.html" %} {% block title %}Upload Chest X-Ray - PneumoNet-V2{%
+endblock %} {% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-primary text-white text-center">
+        <h4 class="mb-0">
+          <i class="bi bi-cloud-upload-fill me-2"></i>Upload Chest X-Ray
+        </h4>
+      </div>
+      <div class="card-body">
+        <form method="POST" enctype="multipart/form-data" class="mb-4">
+          <div class="mb-3">
+            <label for="images" class="form-label"
+              >Select one or more X-ray images:</label
+            >
+            <input
+              type="file"
+              class="form-control"
+              id="images"
+              name="images"
+              multiple
+              accept="image/*"
+              required
+            />
+          </div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary btn-lg">
+              <i class="bi bi-search-heart me-1"></i>Upload and Predict
+            </button>
+          </div>
+        </form>
+
+        {% if predictions %}
+        <hr />
+        <h5 class="text-success">
+          <i class="bi bi-bar-chart-line-fill me-2"></i>Prediction Results
+        </h5>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th scope="col">Filename</th>
+                <th scope="col">Prediction</th>
+                <th scope="col">Confidence</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for result in predictions %}
+              <tr>
+                <td>{{ result.filename }}</td>
+                <td>
+                  {% if result.label == 'Pneumonia' %}
+                  <span class="badge bg-danger">{{ result.label }}</span>
+                  {% else %}
+                  <span class="badge bg-success">{{ result.label }}</span>
+                  {% endif %}
+                </td>
+                <td>{{ result.confidence }}%</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

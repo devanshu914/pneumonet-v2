@@ -1,0 +1,48 @@
+{% extends "base.html" %} {% block title %}View Prediction{% endblock %} {%
+block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-6">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-primary text-white text-center">
+        <h4 class="mb-0">Prediction Details</h4>
+      </div>
+      <div class="card-body text-center">
+        <div class="mb-3">
+          <img
+            src="{{ url_for('static', filename='uploads/' + prediction.filename) }}"
+            alt="Uploaded Chest X-Ray"
+            class="img-fluid rounded shadow-sm"
+          />
+        </div>
+        <ul class="list-group list-group-flush text-start">
+          <li class="list-group-item">
+            <strong>Prediction:</strong> {{ prediction.prediction }}
+          </li>
+          <li class="list-group-item">
+            <strong>Confidence:</strong> {{ prediction.confidence }}%
+          </li>
+          <li class="list-group-item">
+            <strong>Uploaded on:</strong> {{ prediction.timestamp }}
+          </li>
+        </ul>
+
+        {% if overlay_filename %}
+        <hr />
+        <h5 class="mt-4">Grad-CAM Visualization</h5>
+        <img
+          src="{{ url_for('static', filename='uploads/' + overlay_filename) }}"
+          alt="Grad-CAM Heatmap"
+          class="img-fluid rounded mt-2 shadow-sm"
+        />
+        {% endif %}
+
+        <div class="d-grid gap-2 mt-4">
+          <a href="{{ url_for('history') }}" class="btn btn-secondary"
+            >Back to History</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

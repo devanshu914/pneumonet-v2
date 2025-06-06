@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - PneumoNet-V2{% endblock %}
+
+{% block content %}
+<div class="dashboard-container py-4">
+    <div class="text-center mb-4">
+        <h2 class="fw-bold text-primary">Welcome to Your Dashboard</h2>
+        <p class="lead">Hello, <strong>{{ current_user.username }}</strong> 👋</p>
+        <p class="text-muted">Here are your recent pneumonia detection results.</p>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">📂 Your Prediction History</h5>
+        </div>
+        <div class="card-body">
+            {% if predictions %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">📁 Filename</th>
+                            <th scope="col">🔍 Prediction</th>
+                            <th scope="col">📊 Confidence</th>
+                            <th scope="col">⏰ Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for prediction in predictions %}
+                        <tr>
+                            <td>{{ prediction.filename }}</td>
+                            <td>
+                                {% if prediction.prediction == "Pneumonia" %}
+                                    <span class="badge bg-danger">{{ prediction.prediction }}</span>
+                                {% else %}
+                                    <span class="badge bg-success">{{ prediction.prediction }}</span>
+                                {% endif %}
+                            </td>
+                            <td><strong>{{ prediction.confidence }}%</strong></td>
+                            <td>{{ prediction.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info text-center mb-0">
+                <h6 class="mb-0">You haven't made any predictions yet. Upload a chest X-ray to get started!</h6>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

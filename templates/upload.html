@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Chest X-Ray{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white text-center">
+                <h4 class="mb-0">Upload Chest X-Ray</h4>
+            </div>
+            <div class="card-body">
+                <p class="text-center text-muted mb-4">
+                    Upload one or more chest X-ray images to detect signs of pneumonia using our AI system.
+                </p>
+
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="images" class="form-label">Choose Image(s)</label>
+                        <input type="file" class="form-control" id="images" name="images" accept="image/*" multiple required>
+                        <div class="form-text">You can upload multiple .jpg, .jpeg, or .png files.</div>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Upload and Predict</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

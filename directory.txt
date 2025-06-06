@@ -1,0 +1,15 @@
+/Users/devanshuurmaliya/Downloads/PenmoNet_V2_Project/chest_xray
+/Users/devanshuurmaliya/Downloads/PenmoNet_V2_Project/chest_xray/test
+/Users/devanshuurmaliya/Downloads/PenmoNet_V2_Project/chest_xray/test/NORMAL
+/Users/devanshuurmaliya/Downloads/PenmoNet_V2_Project/chest_xray/test/PNEUMONIA
+/Users/devanshuurmaliya/Downloads/PenmoNet_V2_Project/chest_xray/train
+/Users/devanshuurmaliya/Downloads/PenmoNet_V2_Project/chest_xray/train/NORMAL
+/Users/devanshuurmaliya/Downloads/PenmoNet_V2_Project/chest_xray/train/PNEUMONIA
+/Users/devanshuurmaliya/Downloads/PenmoNet_V2_Project/chest_xray/val
+/Users/devanshuurmaliya/Downloads/PenmoNet_V2_Project/chest_xray/val/NORMAL
+/Users/devanshuurmaliya/Downloads/PenmoNet_V2_Project/chest_xray/val/PNEUMONIA
+
+
+# Save current epoch number for resuming later
+    with open(epoch_log_file, 'w') as f:
+        f.write(str(epoch_chunk))
