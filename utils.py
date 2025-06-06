@@ -1,6 +1,3 @@
-from tensorflow.keras.preprocessing import image
-import numpy as np
-
 import numpy as np
 from tensorflow.keras.utils import load_img, img_to_array
 
